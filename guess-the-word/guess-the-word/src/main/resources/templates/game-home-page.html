@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>GuessTheWord</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #76c1d4;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 60px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px #fff;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        h2.remaining-tries {
+            text-align: right;
+            margin-right: 30px;
+            margin-top: -20px;
+        }
+
+        .reload-container {
+            text-align: right;
+            margin-right: 30px;
+            margin-top: 10px;
+        }
+
+        #reload {
+            padding: 15px 25px;
+            background-color: #007bff;
+            color: white;
+            margin-right: 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+        }
+
+        #reload:hover {
+            background-color: #0056b3;
+        }
+
+        .form-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .word-card {
+            background-color: #fff;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-size: 1.2rem;
+            color: #555;
+            font-weight: bold;
+            width: 120px;
+            transition: 0.3s ease-in-out;
+        }
+
+        .word-card:hover {
+            background-color: #ffe8e8;
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .form-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .message {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: red;
+        }
+
+        .win-message {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.5rem;
+            color: green;
+        }
+    </style>
+    <script>
+        window.onload = function checkIfGameOver() {
+            var numberOfTriesRemaining = [[${triesLeft}]];
+
+            if (numberOfTriesRemaining === 0) {
+                alert("Game Over");
+                document.getElementById('guessedChar').disabled = true;
+                document.getElementById('try').disabled = true;
+            }
+        }
+
+        function reloadGame() {
+            window.location.href = "http://localhost:9090/reload";
+        }
+    </script>
+</head>
+<body>
+<h1>Guess the Word</h1>
+
+<!-- Display the current word -->
+<h2  th:text="${wordToDisplay}">Show a random word here</h2>
+<h2 class="remaining-tries" th:text="'Tries Remaining : ' + ${triesLeft}">Show number of tries left here</h2>
+<hr/>
+<!--Reload button-->
+<div class = "reload-container"></div>
+<input type="button" value="Reload" id="reload" style="float:right;" onclick="reloadGame();">
+</div>
+
+<!-- Form for guessing -->
+<div class="form-container">
+    <form action="game-home" method="GET">
+        <label>Guess a Character:</label>
+        <input type="text" name="guessedChar" id="guessedChar" maxlength="1" placeholder="Enter a letter">
+        <input type="submit" value="Try" id="try">
+    </form>
+</div>
+
+<!-- Display the list of random words as options -->
+
+<div class="container">
+    <div class="word-card" th:each="word : ${randomWords}" th:text="${word}">Word</div>
+</div>
+
+<!-- Display error message -->
+<div class="message" th:if="${errorMessage != null}">
+    <p th:text="${errorMessage}"></p>
+</div>
+
+
+<!-- Display winning message -->
+<div class="win-message" th:if="${gameStatus == 'You Won!'}">
+    <h2 th:text="${gameStatus}">You Won!</h2>
+    <img src="https://cdn-icons-png.flaticon.com/512/2954/2954893.png" style="display:block; margin:auto; width:150px; height:150px;">
+</div>
+</body>
+</html>
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>GuessTheWord</title>-->
+<!--    <style>-->
+<!--        body {-->
+<!--            font-family: 'Arial', sans-serif;-->
+<!--            margin: 0;-->
+<!--            padding: 0;-->
+<!--            background: linear-gradient(135deg, #ff9a9e, #fad0c4);-->
+<!--            color: #333;-->
+<!--        }-->
+
+<!--        h1 {-->
+<!--            text-align: center;-->
+<!--            color: #333;-->
+<!--            margin-top: 40px; /* Adjusted to move it slightly down */-->
+<!--            font-size: 2.5rem;-->
+<!--            text-shadow: 2px 2px #fff;-->
+<!--        }-->
+
+<!--        h2 {-->
+<!--            margin-top: 10px;-->
+<!--            text-align: center;-->
+<!--        }-->
+
+<!--        h2.remaining-tries {-->
+<!--            text-align: right;-->
+<!--            margin-right: 30px; /* Moved it inward from the edge */-->
+<!--            margin-top: -20px; /* Adjusted spacing */-->
+<!--        }-->
+
+<!--        .reload-container {-->
+<!--            text-align: right;-->
+<!--            margin-right: 30px; /* Moved it inward from the edge */-->
+<!--            margin-top: 10px;-->
+<!--        }-->
+
+<!--        #reload {-->
+<!--            padding: 15px 25px; /* Increased size */-->
+<!--            background-color: #007bff;-->
+<!--            color: white;-->
+<!--            border: none;-->
+<!--            border-radius: 5px;-->
+<!--            font-size: 1rem;-->
+<!--            cursor: pointer;-->
+<!--            transition: 0.3s ease-in-out;-->
+<!--        }-->
+
+<!--        #reload:hover {-->
+<!--            background-color: #0056b3;-->
+<!--        }-->
+
+<!--        .form-container {-->
+<!--            margin-top: 20px;-->
+<!--            text-align: center;-->
+<!--        }-->
+
+<!--        input[type="text"] {-->
+<!--            padding: 10px;-->
+<!--            border: 1px solid #ccc;-->
+<!--            border-radius: 5px;-->
+<!--            font-size: 1rem;-->
+<!--        }-->
+
+<!--        input[type="submit"] {-->
+<!--            padding: 10px 20px;-->
+<!--            background-color: #4caf50;-->
+<!--            color: white;-->
+<!--            border: none;-->
+<!--            border-radius: 5px;-->
+<!--            font-size: 1rem;-->
+<!--            cursor: pointer;-->
+<!--            transition: 0.3s ease-in-out;-->
+<!--        }-->
+
+<!--        input[type="submit"]:hover {-->
+<!--            background-color: #45a049;-->
+<!--        }-->
+
+<!--        .message {-->
+<!--            text-align: center;-->
+<!--            margin-top: 20px;-->
+<!--            font-size: 1.2rem;-->
+<!--            color: red;-->
+<!--        }-->
+
+<!--        .win-message {-->
+<!--            text-align: center;-->
+<!--            margin-top: 20px;-->
+<!--            font-size: 1.5rem;-->
+<!--            color: green;-->
+<!--        }-->
+<!--    </style>-->
+
+<!--    <script>-->
+<!--        window.onload = function checkIfGameOver() {-->
+<!--            var numberOfTriesRemaining = [[${triesLeft}]];-->
+
+<!--            if (numberOfTriesRemaining === 0) {-->
+<!--                alert("Game Over");-->
+<!--                document.getElementById('guessedChar').disabled = true;-->
+<!--                document.getElementById('try').disabled = true;-->
+<!--            }-->
+<!--        }-->
+
+<!--        function reloadGame() {-->
+<!--            window.location.href = "http://localhost:9090/reload";-->
+<!--        }-->
+<!--    </script>-->
+<!--</head>-->
+<!--<body>-->
+<!--&lt;!&ndash; Title &ndash;&gt;-->
+<!--<h1>Guess the Word</h1>-->
+
+<!--&lt;!&ndash; Display the word &ndash;&gt;-->
+<!--<h2 th:text="${wordToDisplay}">Show a random word here</h2>-->
+
+<!--&lt;!&ndash; Display tries remaining &ndash;&gt;-->
+<!--<h2 class="remaining-tries" th:text="'Tries Remaining : ' + ${triesLeft}">Show number of tries left here</h2>-->
+
+<!--&lt;!&ndash; Reload button &ndash;&gt;-->
+<!--<div class="reload-container">-->
+<!--    <input type="button" value="Reload" id="reload" onclick="reloadGame();">-->
+<!--</div>-->
+
+<!--&lt;!&ndash; Guess form &ndash;&gt;-->
+<!--<div class="form-container">-->
+<!--    <form action="game-home" method="GET">-->
+<!--        <label>Guess a Char:</label>-->
+<!--        <input type="text" name="guessedChar" id="guessedChar" maxlength="1" placeholder="Enter a letter">-->
+<!--        <input type="submit" value="Try" id="try">-->
+<!--    </form>-->
+<!--</div>-->
+
+<!--<div class="container">-->
+<!--    <div class="word-card" th:each="word : ${randomWords}" th:text="${word}">Word</div>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; Display error message &ndash;&gt;-->
+<!--<div class="message" th:if="${errorMessage != null}">-->
+<!--    <p th:text="${errorMessage}"></p>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; Display winning message &ndash;&gt;-->
+<!--<div class="win-message" th:if="${gameStatus == 'You Win!'}">-->
+<!--    <h2 th:text="${gameStatus}">You Win!</h2>-->
+<!--    <img src="https://cdn-icons-png.flaticon.com/512/2954/2954893.png" style="display:block; margin:auto; width:150px; height:150px;">-->
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->
+
